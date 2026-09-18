@@ -94,7 +94,7 @@ with col2:
     simulaciones = st.number_input(
         "🎲 Número de simulaciones",
         min_value=100,
-        max_value=100000,
+        max_value=50000,
         value=10000,
         step=1000
     )
