@@ -150,7 +150,7 @@ with st.expander("Modelo matemático"):
     )
     st.latex(
         """
-        
+        r
         f(z)=\frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}}
         
         """
