@@ -16,11 +16,11 @@ st.set_page_config(
 )
 st.image("UNRC.svg", caption="Universidad Nacional Rosario Castellanos", width=400)
 #####
-st.subheader("Licenciatura en Contaduría y Finanzas UNRC")
+st.title("Licenciatura en Contaduría y Finanzas UNRC")
 st.title("Reto Actinver 2026")
 
 #####
-st.title("Simulación Monte Carlo con Movimiento Geométrico Browniano")
+st.subheader("Simulación Monte Carlo con Movimiento Geométrico Browniano")
 
 st.write(
     """
