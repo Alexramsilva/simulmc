@@ -35,7 +35,7 @@ st.write(
 # ============================================================
 
 TICKERS = [
-"GAPB.MX","SPY", "GRUMAB.MX",  "NVDA","QUBT", "QTUM", "VOO", "QQQ", 
+"GAPB.MX","SPY",  "NVDA","QUBT", "QTUM", "VOO", "QQQ", 
 "AVGO", "ASURB.MX", "QBTS" , "^GSPC","BTC-USD", "BABA", "VISTAA.MX", "DANHOS13.MX", "EDUCA18.MX",
 "FIBRAMQ12.MX", "FIBRAPL14.MX", "FIHO12.MX", "FINN13.MX", "FMTY14.MX",
 "FPLUS16.MX", "FSHOP13.MX", "FUNO11.MX", "ACCELSAB.MX", "AGUA.MX", 
@@ -58,7 +58,7 @@ TICKERS = [
 "HCITY.MX", "HOTEL.MX", "LIVEPOL1.MX", "NEMAKA.MX", "POSADASA.MX",
 "RLHA.MX", "SPORTS.MX", "VASCONI.MX", "ARKB", "BTCW", "BTCO", "BITB",
 "HODL", "EZBC", "FBTC", "BRRR", "GBTC", "DEFI", "IBIT", "ACWI",
-"FAS", "SPXL", "TECL", "IAU", "NU", "MELI", "META",
+"FAS", "SPXL", "TECL", "IAU", "NU", "MELI", "META", "MSTR",
 "JPM","NFLX", "IONQ", "RGTI", "PLTR", "SOFI", "HOOD", "FRES.MX", "MCHI", "INDA", "TSM", "AMD", "GOOGL", "AMZN","V"
 
 ]
