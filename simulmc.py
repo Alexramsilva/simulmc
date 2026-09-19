@@ -25,7 +25,7 @@ st.subheader("Simulación Monte Carlo con Movimiento Geométrico Browniano")
 st.write(
     """
     Simulación de posibles rendimientos futuros mediante el
-    **Movimiento Geométrico Browniano (GBM)**.
+    **Movimiento Geométrico Browniano **.
     """
 )
 
@@ -695,7 +695,7 @@ if st.button(
 
 
     plt.xticks(
-        rotation=90, fontsize=7
+        rotation=90, fontsize=5
     )
 
     plt.tight_layout()
@@ -741,7 +741,7 @@ if st.button(
 
     st.caption(
                 """
-                ⚠️ El modelo utiliza un movimiento browniano geométrico (en base al lema de Kiyosi Itô)
+                ⚠️ El modelo utiliza un Movimiento Browniano Geométrico (en base al lema de Kiyosi Itô)
                 basado en rendimientos históricos. Los resultados son
                 escenarios simulados y no constituyen una predicción
                 ni una recomendación de inversión.
