@@ -148,7 +148,7 @@ with st.expander("Modelo matemático"):
         $Z\\sim N(0,1)$.
         """
     )
-    st.write(
+    st.latex(
         """
         Z \sim N(0,1),
         \qquad
