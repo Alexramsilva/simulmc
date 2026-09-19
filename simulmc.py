@@ -111,6 +111,11 @@ INVERSION = 100000
 # ============================================================
 
 with st.expander("Modelo matemático"):
+    st.latex(
+        r"""
+        r=\frac{(S_t-S_{t-1})}{S_{t-1}}        
+        """
+    )
 
     st.latex(
         r"""
