@@ -14,7 +14,7 @@ st.set_page_config(
     page_icon="📈",
     layout="wide"
 )
-st.image("UNRC.svg", caption="Universidad Nacional Rosario Castellanos", width=250)
+st.image("UNRC.svg", caption="Universidad Nacional Rosario Castellanos", width=300)
 #####
 st.title("Licenciatura en Contaduría y Finanzas UNRC")
 st.title("Reto Actinver 2026")
