@@ -734,6 +734,6 @@ if st.button(
 
         El VaR y CVaR corresponden al rendimiento acumulado
         durante el horizonte de simulación para una inversión
-        inicial de $100,000.
+        inicial de $100,000.00 (MXN)
         """
     )
