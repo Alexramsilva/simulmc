@@ -25,7 +25,7 @@ st.subheader("Simulación Monte Carlo con Movimiento Geométrico Browniano")
 st.write(
     """
     Simulación de posibles rendimientos futuros mediante el
-    **Movimiento Geométrico Browniano **.
+    Movimiento Geométrico Browniano.
     """
 )
 
@@ -148,7 +148,15 @@ with st.expander("Modelo matemático"):
         $Z\\sim N(0,1)$.
         """
     )
+    st.write(
+        """
+        Z \sim N(0,1),
+        \qquad
+        f(z)=\frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}},
+        \quad -\infty<z<\infty
 
+        """
+    )
 
 # ============================================================
 # OBTENER PRECIOS
@@ -741,7 +749,7 @@ if st.button(
 
     st.caption(
                 """
-                ⚠️ El modelo utiliza un Movimiento Browniano Geométrico (en base al lema de Kiyosi Itô)
+                ⚠️ El modelo utiliza un Movimiento Geométrico Browniano (en base al lema de Kiyosi Itô)
                 basado en rendimientos históricos. Los resultados son
                 escenarios simulados y no constituyen una predicción
                 ni una recomendación de inversión.
