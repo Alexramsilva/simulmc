@@ -150,11 +150,9 @@ with st.expander("Modelo matemático"):
     )
     st.latex(
         """
-        Z \sim N(0,1),
-        \qquad
-        f(z)=\frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}},
-        \quad -\infty<z<\infty
-
+        
+        f(z)=\frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}}
+        
         """
     )
 
