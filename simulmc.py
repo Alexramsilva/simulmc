@@ -737,3 +737,13 @@ if st.button(
         inicial de $100,000.00 (MXN)
         """
     )
+
+
+    st.caption(
+                """
+                ⚠️ El modelo utiliza un movimiento browniano geométrico (en base al lema de Kiyosi Itô)
+                basado en rendimientos históricos. Los resultados son
+                escenarios simulados y no constituyen una predicción
+                ni una recomendación de inversión.
+                """
+    )
