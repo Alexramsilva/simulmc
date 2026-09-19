@@ -14,7 +14,7 @@ st.set_page_config(
     page_icon="📈",
     layout="wide"
 )
-st.image("NQH.svg", caption="", width=400)
+st.image("UNRC.svg", caption="", width=400)
 
 st.title("Simulación Monte Carlo con Movimiento Geométrico Browniano")
 
