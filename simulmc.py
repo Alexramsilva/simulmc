@@ -1,4 +1,3 @@
-
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -20,8 +19,8 @@ st.title("Simulación Monte Carlo con Movimiento Geométrico Browniano")
 
 st.write(
     """
-    Esta aplicación utiliza el **Movimiento Geométrico Browniano (GBM)**
-    para simular posibles precios futuros de diferentes activos financieros.
+    Simulación de posibles rendimientos futuros mediante el
+    **Movimiento Geométrico Browniano (GBM)**.
     """
 )
 
@@ -108,7 +107,7 @@ INVERSION = 100000
 
 
 # ============================================================
-# EXPLICACIÓN DEL MODELO
+# MODELO MATEMÁTICO
 # ============================================================
 
 with st.expander("Modelo matemático"):
@@ -119,42 +118,30 @@ with st.expander("Modelo matemático"):
         """
     )
 
-    st.write(
-        """
-        La solución exacta del Movimiento Geométrico Browniano utilizada
-        en la simulación es:
-        """
-    )
-
     st.latex(
         r"""
-        S_{t+\Delta t}
-        =
-        S_t
+        S_T=S_0
         \exp
         \left[
-        \left(\mu-\frac{1}{2}\sigma^2\right)\Delta t
+        \left(\mu-\frac{1}{2}\sigma^2\right)T
         +
-        \sigma\sqrt{\Delta t}Z_t
+        \sigma\sqrt{T}Z
         \right]
         """
     )
 
     st.write(
         """
-        donde:
-
-        - $S_t$ = precio del activo
-        - $\\mu$ = rendimiento medio
-        - $\\sigma$ = volatilidad
-        - $\\Delta t$ = intervalo temporal
-        - $Z_t \\sim N(0,1)$
+        donde $S_0$ es el precio actual, $\mu$ es el rendimiento
+        medio anualizado, $\sigma$ es la volatilidad anualizada,
+        $T$ es el horizonte de simulación y
+        $Z\\sim N(0,1)$.
         """
     )
 
 
 # ============================================================
-# DESCARGA DE PRECIOS
+# OBTENER PRECIOS
 # ============================================================
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -186,6 +173,7 @@ def obtener_precios(ticker, periodo):
         return precios
 
     except Exception:
+
         return None
 
 
@@ -226,46 +214,6 @@ def simular_terminal_gbm(
 
 
 # ============================================================
-# TRAYECTORIAS PARA LOS 5 MEJORES
-# ============================================================
-
-def generar_trayectorias(
-    S0,
-    mu_anual,
-    sigma_anual,
-    dias,
-    numero_trayectorias=100,
-    semilla=42
-):
-
-    dt = 1 / 252
-
-    rng = np.random.default_rng(semilla)
-
-    Z = rng.normal(
-        0,
-        1,
-        (numero_trayectorias, dias)
-    )
-
-    incremento = (
-        (mu_anual - 0.5 * sigma_anual**2) * dt
-        +
-        sigma_anual * np.sqrt(dt) * Z
-    )
-
-    trayectorias = (
-        S0
-        *
-        np.exp(
-            np.cumsum(incremento, axis=1)
-        )
-    )
-
-    return trayectorias
-
-
-# ============================================================
 # BOTÓN
 # ============================================================
 
@@ -285,7 +233,7 @@ if st.button(
 
 
     # ========================================================
-    # PROCESAMIENTO DE ACTIVOS
+    # PROCESAR ACTIVOS
     # ========================================================
 
     for i, ticker in enumerate(TICKERS):
@@ -301,9 +249,11 @@ if st.button(
         )
 
         if precios is None:
+
             progreso.progress(
                 (i + 1) / total_activos
             )
+
             continue
 
 
@@ -320,7 +270,7 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # PARÁMETROS GBM
+        # PARÁMETROS
         # ----------------------------------------------------
 
         mu_diaria = log_returns.mean()
@@ -333,7 +283,7 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # PRECIO INICIAL
+        # PRECIO ACTUAL
         # ----------------------------------------------------
 
         S0 = float(
@@ -343,15 +293,13 @@ if st.button(
 
         # ----------------------------------------------------
         # HORIZONTE
-        #
-        # Mismo número de días que el periodo histórico
         # ----------------------------------------------------
 
         dias = len(log_returns)
 
 
         # ----------------------------------------------------
-        # SIMULACIÓN TERMINAL
+        # SIMULACIÓN
         # ----------------------------------------------------
 
         precio_final = simular_terminal_gbm(
@@ -374,20 +322,15 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # VALOR DE LA INVERSIÓN
+        # INVERSIÓN
         # ----------------------------------------------------
 
         valor_final = (
-            INVERSION
-            *
-            (1 + rendimiento)
+            INVERSION * (1 + rendimiento)
         )
 
-
         ganancia = (
-            valor_final
-            -
-            INVERSION
+            valor_final - INVERSION
         )
 
 
@@ -423,7 +366,7 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # VaR 95%
+        # VaR
         # ----------------------------------------------------
 
         VaR_95 = max(
@@ -433,7 +376,7 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # CVaR 95%
+        # CVaR
         # ----------------------------------------------------
 
         cola = rendimiento[
@@ -467,7 +410,7 @@ if st.button(
 
 
         # ----------------------------------------------------
-        # RESULTADO
+        # GUARDAR RESULTADOS
         # ----------------------------------------------------
 
         resultados.append({
@@ -532,7 +475,7 @@ if st.button(
 
         st.error(
             "No fue posible obtener datos suficientes "
-            "para ninguno de los activos."
+            "para los activos seleccionados."
         )
 
         st.stop()
@@ -548,7 +491,7 @@ if st.button(
 
 
     # ========================================================
-    # ORDENAMIENTO
+    # ORDENAR RANKING
     # ========================================================
 
     df_resultados = (
@@ -572,21 +515,8 @@ if st.button(
 
 
     # ========================================================
-    # TOP 5
+    # MOSTRAR RANKING
     # ========================================================
-
-    top5 = df_resultados.head(5)
-
-
-    # ========================================================
-    # RESULTADO PRINCIPAL
-    # ========================================================
-
-    st.success(
-        f"Simulación terminada. "
-        f"Se analizaron {len(df_resultados)} activos."
-    )
-
 
     st.subheader(
         "Ranking de activos"
@@ -594,10 +524,11 @@ if st.button(
 
 
     # ========================================================
-    # TABLA
+    # TABLA PARA MOSTRAR
     # ========================================================
 
     tabla = df_resultados.copy()
+
 
     tabla["Rendimiento promedio"] = (
         tabla["Rendimiento promedio"]
@@ -668,14 +599,14 @@ if st.button(
 
 
     # ========================================================
-    # TOP 1
+    # ACTIVO #1
     # ========================================================
 
-    ganador = df_resultados.iloc[0]
+    primero = df_resultados.iloc[0]
 
 
     st.subheader(
-        "Activo con mayor rendimiento promedio simulado"
+        "Resultado principal"
     )
 
 
@@ -685,8 +616,8 @@ if st.button(
     with c1:
 
         st.metric(
-            "Activo",
-            ganador["Ticker"]
+            "Ranking #1",
+            primero["Ticker"]
         )
 
 
@@ -694,7 +625,7 @@ if st.button(
 
         st.metric(
             "Rendimiento promedio",
-            f"{ganador['Rendimiento promedio']:.2%}"
+            f"{primero['Rendimiento promedio']:.2%}"
         )
 
 
@@ -702,7 +633,7 @@ if st.button(
 
         st.metric(
             "Valor final promedio",
-            f"${ganador['Valor final promedio']:,.2f}"
+            f"${primero['Valor final promedio']:,.2f}"
         )
 
 
@@ -710,31 +641,35 @@ if st.button(
 
         st.metric(
             "Probabilidad de ganancia",
-            f"{ganador['Probabilidad de ganancia']:.2%}"
+            f"{primero['Probabilidad de ganancia']:.2%}"
         )
 
 
     # ========================================================
-    # GRÁFICA DE RENDIMIENTOS
+    # ÚNICA GRÁFICA
     # ========================================================
 
     st.subheader(
-        "Rendimiento promedio simulado"
+        "Rendimiento promedio por activo"
     )
 
+
     fig, ax = plt.subplots(
-        figsize=(12, 6)
+        figsize=(12, 5)
     )
+
 
     ax.bar(
         df_resultados["Ticker"],
         df_resultados["Rendimiento promedio"]
     )
 
+
     ax.axhline(
         0,
         linewidth=1
     )
+
 
     ax.set_ylabel(
         "Rendimiento"
@@ -748,54 +683,6 @@ if st.button(
         "Ranking por rendimiento promedio simulado"
     )
 
-    plt.xticks(
-        rotation=90
-    )
-
-    plt.tight_layout()
-
-    st.pyplot(fig)
-
-    plt.close(fig)
-
-
-    # ========================================================
-    # VALOR FINAL DE LA INVERSIÓN
-    # ========================================================
-
-    st.subheader(
-        "Valor final promedio de una inversión de $100,000"
-    )
-
-    fig, ax = plt.subplots(
-        figsize=(12, 6)
-    )
-
-    ax.bar(
-        df_resultados["Ticker"],
-        df_resultados["Valor final promedio"]
-    )
-
-    ax.axhline(
-        INVERSION,
-        linestyle="--",
-        linewidth=1,
-        label="$100,000 iniciales"
-    )
-
-    ax.set_ylabel(
-        "Valor final ($)"
-    )
-
-    ax.set_xlabel(
-        "Activo"
-    )
-
-    ax.set_title(
-        "Valor final promedio simulado"
-    )
-
-    ax.legend()
 
     plt.xticks(
         rotation=90
@@ -809,182 +696,7 @@ if st.button(
 
 
     # ========================================================
-    # VaR Y CVaR
-    # ========================================================
-
-    st.subheader(
-        "Riesgo: VaR y CVaR al 95%"
-    )
-
-    fig, ax = plt.subplots(
-        figsize=(12, 6)
-    )
-
-    x = np.arange(
-        len(df_resultados)
-    )
-
-    ancho = 0.35
-
-    ax.bar(
-        x - ancho / 2,
-        df_resultados["VaR 95%"],
-        width=ancho,
-        label="VaR 95%"
-    )
-
-    ax.bar(
-        x + ancho / 2,
-        df_resultados["CVaR 95%"],
-        width=ancho,
-        label="CVaR 95%"
-    )
-
-    ax.set_xticks(x)
-
-    ax.set_xticklabels(
-        df_resultados["Ticker"],
-        rotation=90
-    )
-
-    ax.set_ylabel(
-        "Pérdida potencial ($)"
-    )
-
-    ax.set_xlabel(
-        "Activo"
-    )
-
-    ax.set_title(
-        "VaR y CVaR del rendimiento acumulado al horizonte simulado"
-    )
-
-    ax.legend()
-
-    plt.tight_layout()
-
-    st.pyplot(fig)
-
-    plt.close(fig)
-
-
-    # ========================================================
-    # TRAYECTORIAS TOP 5
-    # ========================================================
-
-    st.subheader(
-        "Trayectorias simuladas de los 5 activos con mayor rendimiento"
-    )
-
-
-    for posicion, (_, fila) in enumerate(
-        top5.iterrows(),
-        start=1
-    ):
-
-        ticker = fila["Ticker"]
-
-        precios = obtener_precios(
-            ticker,
-            periodo_yf
-        )
-
-        if precios is None:
-            continue
-
-
-        log_returns = np.log(
-            precios / precios.shift(1)
-        ).dropna()
-
-
-        mu_diaria = log_returns.mean()
-
-        sigma_diaria = log_returns.std()
-
-        mu_anual = mu_diaria * 252
-
-        sigma_anual = sigma_diaria * np.sqrt(252)
-
-        S0 = float(
-            precios.iloc[-1]
-        )
-
-        dias = len(log_returns)
-
-
-        trayectorias = generar_trayectorias(
-            S0=S0,
-            mu_anual=mu_anual,
-            sigma_anual=sigma_anual,
-            dias=dias,
-            numero_trayectorias=100,
-            semilla=5000 + posicion
-        )
-
-
-        # ----------------------------------------------------
-        # GRÁFICA
-        # ----------------------------------------------------
-
-        fig, ax = plt.subplots(
-            figsize=(12, 5)
-        )
-
-
-        for trayectoria in trayectorias:
-
-            ax.plot(
-                trayectoria,
-                alpha=0.08
-            )
-
-
-        # Media de las trayectorias
-
-        media_trayectorias = np.mean(
-            trayectorias,
-            axis=0
-        )
-
-        ax.plot(
-            media_trayectorias,
-            linewidth=2,
-            label="Media simulada"
-        )
-
-
-        ax.axhline(
-            S0,
-            linestyle="--",
-            linewidth=1,
-            label="Precio actual"
-        )
-
-
-        ax.set_title(
-            f"{posicion}. {ticker} — Trayectorias GBM"
-        )
-
-        ax.set_xlabel(
-            "Días de simulación"
-        )
-
-        ax.set_ylabel(
-            "Precio"
-        )
-
-        ax.legend()
-
-        plt.tight_layout()
-
-        st.pyplot(fig)
-
-        plt.close(fig)
-
-
-    # ========================================================
-    # DESCARGA CSV
+    # CSV
     # ========================================================
 
     csv = df_resultados.to_csv(
@@ -993,9 +705,9 @@ if st.button(
 
 
     st.download_button(
-        label="Descargar resultados en CSV",
+        label="Descargar ranking en CSV",
         data=csv,
-        file_name="resultados_gbm.csv",
+        file_name="ranking_gbm.csv",
         mime="text/csv",
         use_container_width=True
     )
@@ -1007,20 +719,11 @@ if st.button(
 
     st.info(
         """
-        **Interpretación:**
+        **Nota:** el ranking se ordena de mayor a menor
+        rendimiento promedio de los precios terminales simulados.
 
-        El ranking se construye a partir del rendimiento promedio
-        de los precios terminales simulados mediante GBM.
-
-        El VaR 95% representa la pérdida potencial asociada al percentil
-        5% de los rendimientos simulados, considerando una inversión
+        El VaR y CVaR corresponden al rendimiento acumulado
+        durante el horizonte de simulación para una inversión
         inicial de $100,000.
-
-        El CVaR 95% representa la pérdida promedio dentro de la cola
-        de peores resultados, también para una inversión inicial de
-        $100,000.
-
-        El horizonte de simulación utiliza el mismo número de días
-        de negociación que el periodo histórico seleccionado.
         """
     )
