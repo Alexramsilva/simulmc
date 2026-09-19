@@ -695,7 +695,7 @@ if st.button(
 
 
     plt.xticks(
-        rotation=90
+        rotation=90, fontsize=7
     )
 
     plt.tight_layout()
