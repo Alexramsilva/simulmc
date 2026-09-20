@@ -427,29 +427,6 @@ if st.button(
 
         # ----------------------------------------------------
         #####
-        resultados = []
-
-for ticker in TICKERS:
-    empresa = yf.Ticker(ticker)
-    income = empresa.financials
-
-    if "Total Revenue" in income.index and "Net Income" in income.index:
-        ventas = income.loc["Total Revenue"].iloc[0]
-        utilidad_neta = income.loc["Net Income"].iloc[0]
-
-        margen_neto = utilidad_neta / ventas
-
-        resultados.append({
-            "Ticker": ticker,
-            "Margen Neto": margen_neto
-        })
-
-df_margen = pd.DataFrame(resultados)
-
-df_margen = df_margen.sort_values(
-    "Margen Neto",
-    ascending=False
-)
         ####
         # GUARDAR RESULTADOS
         # ----------------------------------------------------
@@ -529,8 +506,7 @@ df_margen = df_margen.sort_values(
     df_resultados = pd.DataFrame(
         resultados
     )
-    df_resultados["Margen_Neto"]=df_margen["Margen Neto"]
-
+    
 
     # ========================================================
     # ORDENAR RANKING
