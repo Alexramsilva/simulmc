@@ -428,7 +428,7 @@ if st.button(
         # ----------------------------------------------------
         #####
         empresa = yf.Ticker(TICKERS)
-        income = empresa. financials
+        income = empresa.financials
         ventas = income["Total Revenue"]
         utilidad_neta = income["Net Income"]
         Margen_Neto = np.round((utilidad_neta/ventas),2)
