@@ -430,31 +430,26 @@ if st.button(
         resultados = []
 
 for ticker in TICKERS:
-
     empresa = yf.Ticker(ticker)
     income = empresa.financials
 
-    try:
+    if "Total Revenue" in income.index and "Net Income" in income.index:
         ventas = income.loc["Total Revenue"].iloc[0]
         utilidad_neta = income.loc["Net Income"].iloc[0]
 
         margen_neto = utilidad_neta / ventas
 
-    except (KeyError, IndexError):
-        margen_neto = np.nan
-
-    resultados.append({
-        "Ticker": ticker,
-        "Margen Neto": margen_neto
-    })
-
+        resultados.append({
+            "Ticker": ticker,
+            "Margen Neto": margen_neto
+        })
 
 df_margen = pd.DataFrame(resultados)
 
-df_margen = df_margen.sort_values(
-    "Margen Neto",
-    ascending=False
-)    
+#df_margen = df_margen.sort_values(
+#    "Margen Neto",
+#    ascending=False
+#)
         ####
         # GUARDAR RESULTADOS
         # ----------------------------------------------------
