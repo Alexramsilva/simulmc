@@ -447,13 +447,6 @@ if st.button(
             "Margen Neto": margen_neto
         })
 
-        except (KeyError, IndexError):
-        resultados.append({
-            "Ticker": ticker,
-            "Ventas": np.nan,
-            "Utilidad Neta": np.nan,
-            "Margen Neto": np.nan
-        })
 
         df_margen = pd.DataFrame(resultados)
 
