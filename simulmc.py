@@ -427,12 +427,37 @@ if st.button(
 
         # ----------------------------------------------------
         #####
-        empresa = yf.Ticker(TICKERS)
-        income = empresa.financials
-        ventas = income["Total Revenue"]
-        utilidad_neta = income["Net Income"]
-        Margen_Neto = np.round((utilidad_neta/ventas),2)
-    
+        resultados = []
+
+        for ticker in TICKERS:
+
+            empresa = yf.Ticker(ticker)
+            income = empresa.financials
+
+        try:
+            ventas = income.loc["Total Revenue"].iloc[0]
+            utilidad_neta = income.loc["Net Income"].iloc[0]
+
+            margen_neto = utilidad_neta / ventas
+
+            resultados.append({
+            "Ticker": ticker,
+            "Ventas": ventas,
+            "Utilidad Neta": utilidad_neta,
+            "Margen Neto": margen_neto
+        })
+
+        except (KeyError, IndexError):
+        resultados.append({
+            "Ticker": ticker,
+            "Ventas": np.nan,
+            "Utilidad Neta": np.nan,
+            "Margen Neto": np.nan
+        })
+
+        df_margen = pd.DataFrame(resultados)
+
+        df_margen["Margen Neto"] = df_margen["Margen Neto"].round(4)    
         ####
         # GUARDAR RESULTADOS
         # ----------------------------------------------------
@@ -512,7 +537,7 @@ if st.button(
     df_resultados = pd.DataFrame(
         resultados
     )
-    df_resultados["Margen_Neto"]=Margen_Neto
+    df_resultados["Margen_Neto"]=df_margen["Margen Neto"]
 
 
     # ========================================================
