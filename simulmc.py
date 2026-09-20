@@ -446,10 +446,10 @@ for ticker in TICKERS:
 
 df_margen = pd.DataFrame(resultados)
 
-#df_margen = df_margen.sort_values(
-#    "Margen Neto",
-#    ascending=False
-#)
+df_margen = df_margen.sort_values(
+    "Margen Neto",
+    ascending=False
+)
         ####
         # GUARDAR RESULTADOS
         # ----------------------------------------------------
